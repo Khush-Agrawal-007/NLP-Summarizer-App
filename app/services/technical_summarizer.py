@@ -4,7 +4,7 @@ Technical Product Summarizer using LangChain for structured output
 """
 
 from typing import Dict, List, Any, Optional
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from app.utils.model_utils import load_model_tokenizer, generate_summary
 import torch
 

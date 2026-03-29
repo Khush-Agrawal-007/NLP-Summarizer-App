@@ -27,7 +27,7 @@ class SummarizerService:
         """Creates the summarization pipeline."""
         device = 0 if get_device() == "cuda" else -1
         return pipeline(
-            "summarization",
+            "text-generation",
             model=self.model,
             tokenizer=self.tokenizer,
             device=device
@@ -68,8 +68,8 @@ class SummarizerService:
                 )
                 
                 # Safely extract summary
-                if result and len(result) > 0 and 'summary_text' in result[0]:
-                    return result[0]['summary_text']
+                if result and len(result) > 0:
+                    return result[0].get('summary_text', result[0].get('generated_text', ''))
                 else:
                     return "Error: Unable to generate summary."
                     
@@ -117,8 +117,10 @@ class SummarizerService:
                     truncation=True
                 )
                 
-                if chunk_summary and len(chunk_summary) > 0 and 'summary_text' in chunk_summary[0]:
-                    chunk_summaries.append(chunk_summary[0]['summary_text'])
+                if chunk_summary and len(chunk_summary) > 0:
+                    text = chunk_summary[0].get('summary_text', chunk_summary[0].get('generated_text', ''))
+                    if text:
+                        chunk_summaries.append(text)
                     
             except Exception as e:
                 print(f"Error summarizing chunk {i}: {e}")
@@ -147,8 +149,8 @@ class SummarizerService:
                     truncation=True
                 )
                 
-                if final_summary and len(final_summary) > 0 and 'summary_text' in final_summary[0]:
-                    return final_summary[0]['summary_text']
+                if final_summary and len(final_summary) > 0:
+                    return final_summary[0].get('summary_text', final_summary[0].get('generated_text', ''))
                     
             except Exception as e:
                 print(f"Error in final summarization: {e}")

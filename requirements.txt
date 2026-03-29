@@ -5,8 +5,11 @@ python-dotenv
 transformers[torch]
 PyPDF2
 langchain
+langchain-core
 langchain-community
 langchain-openai
+langchain-text-splitters
+tiktoken
 nltk
 jinja2
 python-multipart

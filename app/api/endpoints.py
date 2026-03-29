@@ -35,7 +35,7 @@ def get_technical_summarizer(request: Request) -> TechnicalSummarizer:
 @router.get("/", response_class=HTMLResponse)
 async def get_ui(request: Request):
     """Serve the HTML UI"""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 
 @router.post("/summarize", response_model=SummarizationResponse)
 async def summarize(
