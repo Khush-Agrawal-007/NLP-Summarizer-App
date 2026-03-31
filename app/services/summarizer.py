@@ -13,25 +13,15 @@ class SummarizerService:
         self.model_name = settings.MODEL_NAME
         self.min_length = settings.MIN_SUMMARY_LENGTH
         self.max_length = settings.MAX_SUMMARY_LENGTH
-        self.model, self.tokenizer = self._load_model()
-        self.abstractive_pipeline = self._create_pipeline()
+        self.model, self.tokenizer, self.device = self._load_model()
         self.stop_words = set(stopwords.words('english'))
 
     def _load_model(self):
         """Loads the pre-trained model and tokenizer."""
         print(f"Loading model: {self.model_name}")
-        model, tokenizer, _ = load_model_tokenizer(self.model_name)
-        return model, tokenizer
-
-    def _create_pipeline(self):
-        """Creates the summarization pipeline."""
-        device = 0 if get_device() == "cuda" else -1
-        return pipeline(
-            "text-generation",
-            model=self.model,
-            tokenizer=self.tokenizer,
-            device=device
-        )
+        from app.utils.model_utils import load_model_tokenizer
+        model, tokenizer, device = load_model_tokenizer(self.model_name)
+        return model, tokenizer, device
 
     def abstractive_summarize(self, text: str) -> str:
         """
@@ -40,6 +30,8 @@ class SummarizerService:
         """
         if not text or len(text.strip()) == 0:
             return "No text provided for summarization."
+        
+        from app.utils.model_utils import generate_summary
         
         # Use tokenizer to get actual token count instead of word count
         tokens = self.tokenizer.encode(text, add_special_tokens=False)
@@ -51,7 +43,6 @@ class SummarizerService:
         if len(tokens) <= max_chunk_length:
             try:
                 # Calculate dynamic max_length based on input
-                # For longer summaries, use 30-40% of input length or configured max
                 input_length = len(tokens)
                 dynamic_max_length = min(
                     max(self.max_length, int(input_length * 0.4)),
@@ -59,19 +50,16 @@ class SummarizerService:
                 )
                 dynamic_min_length = min(self.min_length, dynamic_max_length - 10)
                 
-                result = self.abstractive_pipeline(
-                    text,
+                summary = generate_summary(
+                    model=self.model,
+                    tokenizer=self.tokenizer,
+                    text=text,
+                    device=self.device,
                     max_length=dynamic_max_length,
-                    min_length=dynamic_min_length,
-                    do_sample=False,
-                    truncation=True
+                    min_length=dynamic_min_length
                 )
                 
-                # Safely extract summary
-                if result and len(result) > 0:
-                    return result[0].get('summary_text', result[0].get('generated_text', ''))
-                else:
-                    return "Error: Unable to generate summary."
+                return summary
                     
             except Exception as e:
                 print(f"Error in abstractive summarization: {e}")
@@ -109,18 +97,17 @@ class SummarizerService:
                 )
                 chunk_min_length = min(self.min_length, chunk_max_length - 10)
                 
-                chunk_summary = self.abstractive_pipeline(
-                    chunk,
+                chunk_summary = generate_summary(
+                    model=self.model,
+                    tokenizer=self.tokenizer,
+                    text=chunk,
+                    device=self.device,
                     max_length=chunk_max_length,
-                    min_length=chunk_min_length,
-                    do_sample=False,
-                    truncation=True
+                    min_length=chunk_min_length
                 )
                 
-                if chunk_summary and len(chunk_summary) > 0:
-                    text = chunk_summary[0].get('summary_text', chunk_summary[0].get('generated_text', ''))
-                    if text:
-                        chunk_summaries.append(text)
+                if chunk_summary:
+                    chunk_summaries.append(chunk_summary)
                     
             except Exception as e:
                 print(f"Error summarizing chunk {i}: {e}")
@@ -141,20 +128,22 @@ class SummarizerService:
                 )
                 final_min_length = min(self.min_length, final_max_length - 10)
                 
-                final_summary = self.abstractive_pipeline(
-                    combined_summary,
+                final_summary = generate_summary(
+                    model=self.model,
+                    tokenizer=self.tokenizer,
+                    text=combined_summary,
+                    device=self.device,
                     max_length=final_max_length,
-                    min_length=final_min_length,
-                    do_sample=False,
-                    truncation=True
+                    min_length=final_min_length
                 )
                 
-                if final_summary and len(final_summary) > 0:
-                    return final_summary[0].get('summary_text', final_summary[0].get('generated_text', ''))
+                return final_summary
                     
             except Exception as e:
                 print(f"Error in final summarization: {e}")
                 return combined_summary
+
+        return combined_summary
 
         return combined_summary
 

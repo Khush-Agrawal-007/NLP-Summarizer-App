@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     MAX_SUMMARY_LENGTH: int = 400
     
     # Text processing
-    MIN_TEXT_LENGTH: int = 400
+    MIN_TEXT_LENGTH: int = 50
     
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding='utf-8')
 

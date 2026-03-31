@@ -11,13 +11,17 @@ async def lifespan(app: FastAPI):
     
     # Download NLTK data
     try:
-        nltk.data.find('tokenizers/punkt')
-    except LookupError:
-        nltk.download('punkt')
-    try:
-        nltk.data.find('corpora/stopwords')
-    except LookupError:
-        nltk.download('stopwords')
+        resources = ['tokenizers/punkt', 'corpora/stopwords', 'tokenizers/punkt_tab', 'taggers/averaged_perceptron_tagger']
+        for res in resources:
+            try:
+                nltk.data.find(res)
+            except LookupError:
+                # Extract resource name from path
+                name = res.split('/')[-1]
+                print(f"Downloading missing NLTK resource: {name}")
+                nltk.download(name)
+    except Exception as e:
+        print(f"Warning: NLTK resource download failed: {e}")
         
     # Initialize and load the summarizer model
     summarizer_service = SummarizerService()
