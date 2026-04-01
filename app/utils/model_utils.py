@@ -1,14 +1,16 @@
 # app/utils/model_utils.py
-from typing import Tuple
 import torch
+from typing import Tuple
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 
 def get_device() -> str:
+    """Return 'cuda' if a GPU is available, otherwise 'cpu'."""
     return "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def load_model_tokenizer(model_name: str) -> Tuple[AutoModelForSeq2SeqLM, AutoTokenizer, str]:
+    """Load a seq2seq model and its tokenizer, moving the model to GPU if available."""
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
     device = get_device()
@@ -29,8 +31,10 @@ def generate_summary(
     length_penalty: float = 2.0,
     early_stopping: bool = True,
 ) -> str:
+    """Tokenize text, run beam-search generation, and decode the result."""
     inputs = tokenizer.encode(text, return_tensors="pt", max_length=1024, truncation=True)
     inputs = inputs.to(device)
+
     with torch.no_grad():
         summary_ids = model.generate(
             inputs,
@@ -40,6 +44,5 @@ def generate_summary(
             num_beams=num_beams,
             early_stopping=early_stopping,
         )
+
     return tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-
-

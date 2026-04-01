@@ -2,35 +2,38 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 import nltk
+
 from app.services.summarizer import SummarizerService
+
+# NLTK resources required at runtime
+NLTK_RESOURCES = [
+    'tokenizers/punkt',
+    'corpora/stopwords',
+    'tokenizers/punkt_tab',
+    'taggers/averaged_perceptron_tagger',
+]
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Load resources
-    print("Starting up and loading models...")
-    
-    # Download NLTK data
-    try:
-        resources = ['tokenizers/punkt', 'corpora/stopwords', 'tokenizers/punkt_tab', 'taggers/averaged_perceptron_tagger']
-        for res in resources:
-            try:
-                nltk.data.find(res)
-            except LookupError:
-                # Extract resource name from path
-                name = res.split('/')[-1]
-                print(f"Downloading missing NLTK resource: {name}")
-                nltk.download(name)
-    except Exception as e:
-        print(f"Warning: NLTK resource download failed: {e}")
-        
-    # Initialize and load the summarizer model
-    summarizer_service = SummarizerService()
-    app.state.summarizer = summarizer_service
-    print("Models loaded successfully!")
-    
+    # --- Startup ---
+    print("Starting up...")
+
+    # Download any missing NLTK resources
+    for resource in NLTK_RESOURCES:
+        try:
+            nltk.data.find(resource)
+        except LookupError:
+            name = resource.split('/')[-1]
+            print(f"Downloading NLTK resource: {name}")
+            nltk.download(name, quiet=True)
+
+    # Load the summarizer model and store it in app state
+    app.state.summarizer = SummarizerService()
+    print("Models loaded.")
+
     yield
-    
-    # Shutdown: Clean up resources
-    print("Shutting down and clearing resources...")
+
+    # --- Shutdown ---
+    print("Shutting down...")
     app.state.summarizer = None
-    # Add any additional cleanup logic here

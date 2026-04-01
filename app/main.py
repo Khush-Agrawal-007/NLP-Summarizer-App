@@ -2,7 +2,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
 
 from app.api.endpoints import router as api_router
 from app.core.lifespan import lifespan
@@ -12,7 +11,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Add CORS middleware
+# Allow all origins (suitable for local development)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,13 +20,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount the static files directory
+# Serve static files (CSS, JS, etc.)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Include the API router
+# Register all API routes
 app.include_router(api_router)
+
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
     return {"status": "healthy"}

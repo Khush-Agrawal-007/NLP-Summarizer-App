@@ -12,21 +12,20 @@
             <h1>🔧 Technical Product Summarizer</h1>
             <p class="subtitle">AI-Powered Product Analysis with Structured Output</p>
         </header>
-        
+
         <!-- Tab Navigation -->
         <div class="tab-nav">
             <button class="tab-btn active" onclick="switchTab('technical')">Technical Summary</button>
             <button class="tab-btn" onclick="switchTab('compare')">Product Comparison</button>
             <button class="tab-btn" onclick="switchTab('evaluate')">Evaluation</button>
-            
         </div>
-        
+
         <!-- Tab 1: Technical Summary -->
         <div id="technicalTab" class="tab-content active">
             <div class="info-box">
-                <strong>ℹ️ Technical Summarization:</strong> Extract structured information from product descriptions including specs, pros/cons, and recommendations.
-                </div>
-                
+                <strong>ℹ️ Technical Summarization:</strong> Extract structured information from product descriptions including specs and product category.
+            </div>
+
             <form id="technicalForm">
                 <div class="form-group">
                     <label for="techFileInput">Upload Product Description (PDF):</label>
@@ -38,22 +37,22 @@
                     </div>
                     <div class="file-name" id="techFileName"></div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="techTextInput">Or Enter Product Description:</label>
                     <textarea id="techTextInput" name="text" rows="6" placeholder="Paste a detailed product description here (e.g., laptop, smartphone, monitor specifications)..."></textarea>
                 </div>
-                
+
                 <button type="submit" class="btn-primary">Generate Technical Summary</button>
             </form>
-            
+
             <div class="loading" id="techLoading">
                 <div class="spinner"></div>
                 <p>Analyzing product specifications...</p>
             </div>
-            
+
             <div class="error" id="techError"></div>
-            
+
             <div class="result-section" id="techResult">
                 <h2 class="section-title">📋 Technical Summary</h2>
                 <div class="tech-summary-container">
@@ -61,43 +60,27 @@
                         <h3 id="productName"></h3>
                         <span class="category-badge" id="productCategory"></span>
                         <span class="price-badge" id="productPrice"></span>
-                </div>
-                    
+                    </div>
+
                     <div class="summary-section">
                         <h4>Summary</h4>
                         <p id="productSummary" class="summary-text"></p>
-        </div>
-        
+                    </div>
+
                     <div class="specs-section">
                         <h4>🔧 Key Specifications</h4>
                         <div id="productSpecs" class="specs-grid"></div>
-                </div>
-                
-                    <div class="pros-cons-section">
-                        <div class="pros-box">
-                            <h4>✅ Advantages</h4>
-                            <ul id="productPros"></ul>
-                            </div>
-                        <div class="cons-box">
-                            <h4>⚠️ Disadvantages</h4>
-                            <ul id="productCons"></ul>
-                        </div>
                     </div>
-                    
-                    <div class="recommendation-section">
-                        <h4>💡 Best For</h4>
-                        <p id="productBestFor"></p>
-                        </div>
-                        </div>
+                </div>
             </div>
         </div>
-        
+
         <!-- Tab 2: Product Comparison -->
         <div id="compareTab" class="tab-content">
             <div class="info-box">
-                <strong>ℹ️ Product Comparison:</strong> Compare multiple products side-by-side with structured analysis of specs, features, and use cases.
+                <strong>ℹ️ Product Comparison:</strong> Compare multiple products side-by-side with structured analysis of specs and features.
             </div>
-            
+
             <form id="compareForm">
                 <div class="document-inputs" id="compareInputs">
                     <!-- Product 1 -->
@@ -105,27 +88,27 @@
                         <h3>Product 1</h3>
                         <textarea name="texts" rows="4" placeholder="Enter product description..." class="compare-text"></textarea>
                     </div>
-                    
+
                     <!-- Product 2 -->
                     <div class="product-input-group">
                         <h3>Product 2</h3>
                         <textarea name="texts" rows="4" placeholder="Enter product description..." class="compare-text"></textarea>
                     </div>
                 </div>
-                
+
                 <div class="button-group">
                     <button type="button" id="addProductBtn" class="btn-secondary">+ Add Product (Max 5)</button>
                     <button type="submit" class="btn-primary">Compare Products</button>
                 </div>
             </form>
-            
+
             <div class="loading" id="compareLoading">
                 <div class="spinner"></div>
                 <p>Analyzing and comparing products...</p>
             </div>
-            
+
             <div class="error" id="compareError"></div>
-            
+
             <div class="result-section" id="compareResult">
                 <h2 class="section-title">📊 Comparison Results</h2>
                 <div class="comparison-summary" id="comparisonSummary"></div>
@@ -136,34 +119,34 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Tab 3: Evaluation -->
         <div id="evaluateTab" class="tab-content">
             <div class="info-box">
                 <strong>ℹ️ Evaluation:</strong> Measure summary quality using ROUGE, BLEU, and BARTScore metrics by comparing generated vs reference summaries.
             </div>
-            
+
             <form id="evaluateForm">
                 <div class="form-group">
                     <label for="referenceText">Reference Summary:</label>
                     <textarea id="referenceText" name="reference_text" rows="5" placeholder="Enter the reference (ground truth) summary..." required></textarea>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="generatedText">Generated Summary:</label>
                     <textarea id="generatedText" name="generated_text" rows="5" placeholder="Enter the generated summary to evaluate..." required></textarea>
                 </div>
-                
+
                 <button type="submit" class="btn-primary">Evaluate Quality</button>
             </form>
-            
+
             <div class="loading" id="evalLoading">
                 <div class="spinner"></div>
                 <p>Calculating metrics...</p>
             </div>
-            
+
             <div class="error" id="evalError"></div>
-            
+
             <div class="result-section" id="evalResult">
                 <h2 class="section-title">📊 Evaluation Metrics</h2>
                 <div class="metrics-container">
@@ -184,7 +167,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="metric-group">
                         <h3>BLEU Scores</h3>
                         <div class="metrics-grid">
@@ -202,7 +185,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="metric-group">
                         <h3>BART Score</h3>
                         <div class="metrics-grid">
@@ -212,55 +195,53 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="overall-score">
                         <h3>Overall Score</h3>
                         <div class="score-display" id="overallScore"></div>
                     </div>
                 </div>
-                
+
                 <div class="report-section">
                     <h3>Detailed Report</h3>
                     <pre id="evalReport"></pre>
                 </div>
             </div>
         </div>
-        
-        
     </div>
-    
+
     <script>
         let productCount = 2;
-        
+
         // Tab Switching
         function switchTab(tab) {
             const tabs = document.querySelectorAll('.tab-content');
             const btns = document.querySelectorAll('.tab-btn');
-            
+
             tabs.forEach(t => t.classList.remove('active'));
             btns.forEach(b => b.classList.remove('active'));
-            
+
             const tabMap = {
                 'technical': 'technicalTab',
                 'compare': 'compareTab',
                 'evaluate': 'evaluateTab'
             };
-            
+
             document.getElementById(tabMap[tab]).classList.add('active');
             event.target.classList.add('active');
         }
-        
+
         // Helper function to show errors
         function showError(errorDiv, message) {
             errorDiv.textContent = '❌ ' + message;
             errorDiv.classList.add('show');
         }
-        
+
         // Helper function to hide error
         function hideError(errorDiv) {
             errorDiv.classList.remove('show');
         }
-        
+
         // Tab 1: Technical Summary
         const techForm = document.getElementById('technicalForm');
         const techFileInput = document.getElementById('techFileInput');
@@ -269,57 +250,56 @@
         const techLoading = document.getElementById('techLoading');
         const techResult = document.getElementById('techResult');
         const techError = document.getElementById('techError');
-        
+
         techFileInput.addEventListener('change', (e) => {
             techFileName.textContent = e.target.files.length > 0 ? `Selected: ${e.target.files[0].name}` : '';
         });
-        
+
         techForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             techResult.classList.remove('show');
             hideError(techError);
-            
+
             const file = techFileInput.files[0];
             const text = techTextInput.value.trim();
-            
+
             if (!file && !text) {
                 showError(techError, 'Please provide either a PDF file or text input.');
                 return;
             }
-            
+
             techLoading.classList.add('show');
-            
+
             try {
                 const formData = new FormData(techForm);
-                
+
                 const response = await fetch('/technical-summarize', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 if (!response.ok) {
                     const error = await response.json();
                     throw new Error(error.detail || 'Technical summarization failed');
                 }
-                
+
                 const result = await response.json();
                 displayTechnicalSummary(result);
-                
+
             } catch (error) {
                 showError(techError, error.message);
             } finally {
                 techLoading.classList.remove('show');
             }
         });
-        
+
         function displayTechnicalSummary(data) {
             document.getElementById('productName').textContent = data.product_name;
             document.getElementById('productCategory').textContent = data.category;
             document.getElementById('productPrice').textContent = data.price_range;
             document.getElementById('productSummary').textContent = data.summary;
-            document.getElementById('productBestFor').textContent = data.best_for;
-            
+
             // Specs
             const specsGrid = document.getElementById('productSpecs');
             specsGrid.innerHTML = Object.entries(data.key_specs).map(([key, value]) => `
@@ -328,31 +308,23 @@
                     <span>${value}</span>
                 </div>
             `).join('');
-            
-            // Pros
-            const prosList = document.getElementById('productPros');
-            prosList.innerHTML = data.pros.map(pro => `<li>${pro}</li>`).join('');
-            
-            // Cons
-            const consList = document.getElementById('productCons');
-            consList.innerHTML = data.cons.map(con => `<li>${con}</li>`).join('');
-            
+
             techResult.classList.add('show');
         }
-        
+
         // Tab 2: Product Comparison
         const compareForm = document.getElementById('compareForm');
         const addProductBtn = document.getElementById('addProductBtn');
         const compareLoading = document.getElementById('compareLoading');
         const compareResult = document.getElementById('compareResult');
         const compareError = document.getElementById('compareError');
-        
+
         addProductBtn.addEventListener('click', () => {
             if (productCount >= 5) {
                 showError(compareError, 'Maximum 5 products allowed');
                 return;
             }
-            
+
             productCount++;
             const container = document.getElementById('compareInputs');
             const newProduct = document.createElement('div');
@@ -363,7 +335,7 @@
             `;
             container.appendChild(newProduct);
         });
-        
+
         function removeProduct(btn) {
             btn.closest('.product-input-group').remove();
             productCount--;
@@ -377,46 +349,46 @@
                 }
             });
         }
-        
+
         compareForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             compareResult.classList.remove('show');
             hideError(compareError);
-            
+
             compareLoading.classList.add('show');
-            
+
             try {
                 const formData = new FormData(compareForm);
-                
+
                 const response = await fetch('/compare-products', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 if (!response.ok) {
                     const error = await response.json();
                     throw new Error(error.detail || 'Comparison failed');
                 }
-                
+
                 const result = await response.json();
                 displayComparison(result);
-                
+
             } catch (error) {
                 showError(compareError, error.message);
             } finally {
                 compareLoading.classList.remove('show');
             }
         });
-        
+
         function displayComparison(data) {
             // Summary
             document.getElementById('comparisonSummary').innerHTML = `
                 <p><strong>${data.product_count} products</strong> compared in <strong>${data.category}</strong> category.</p>
                 <p>${data.summary}</p>
             `;
-            
-            // Products grid
+
+            // Products grid (removed "best_for" from display)
             const productsGrid = document.getElementById('productsGrid');
             productsGrid.innerHTML = data.products.map(product => `
                 <div class="product-card">
@@ -425,10 +397,9 @@
                         <span class="category-badge">${product.category}</span>
                         <span class="price-badge">${product.price_range}</span>
                     </div>
-                    <p class="best-for"><strong>Best for:</strong> ${product.best_for}</p>
                 </div>
             `).join('');
-            
+
             // Spec comparison table
             const specComparison = document.getElementById('specComparison');
             if (Object.keys(data.spec_comparison).length > 0) {
@@ -447,67 +418,67 @@
             } else {
                 specComparison.innerHTML = '<p>No common specifications found.</p>';
             }
-            
+
             compareResult.classList.add('show');
         }
-        
+
         // Tab 3: Evaluation
         const evaluateForm = document.getElementById('evaluateForm');
         const evalLoading = document.getElementById('evalLoading');
         const evalResult = document.getElementById('evalResult');
         const evalError = document.getElementById('evalError');
-        
+
         evaluateForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             evalResult.classList.remove('show');
             hideError(evalError);
-            
+
             evalLoading.classList.add('show');
-            
+
             try {
                 const formData = new FormData(evaluateForm);
-                
+
                 const response = await fetch('/evaluate', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 if (!response.ok) {
                     const error = await response.json();
                     throw new Error(error.detail || 'Evaluation failed');
                 }
-                
+
                 const result = await response.json();
                 displayEvaluation(result);
-                
+
             } catch (error) {
                 showError(evalError, error.message);
             } finally {
                 evalLoading.classList.remove('show');
             }
         });
-        
+
         function displayEvaluation(data) {
             const scores = data.scores;
-            
+
             // ROUGE scores
             document.getElementById('rouge1').textContent = scores.rouge1_fmeasure.toFixed(4);
             document.getElementById('rouge2').textContent = scores.rouge2_fmeasure.toFixed(4);
             document.getElementById('rougeL').textContent = scores.rougeL_fmeasure.toFixed(4);
-            
+
             // BLEU scores
             document.getElementById('bleu1').textContent = scores.bleu1.toFixed(4);
             document.getElementById('bleu2').textContent = scores.bleu2.toFixed(4);
             document.getElementById('bleu4').textContent = scores.bleu4.toFixed(4);
-            
+
             // BART Score
             if (scores.bart_score !== undefined) {
                 document.getElementById('bartScore').textContent = scores.bart_score.toFixed(4);
             } else {
                 document.getElementById('bartScore').textContent = 'N/A';
             }
-            
+
             // Overall score
             const overallScore = scores.overall_score;
             const scorePercent = (overallScore * 100).toFixed(1);
@@ -516,14 +487,13 @@
                     <span class="score-number">${scorePercent}%</span>
                 </div>
             `;
-            
+
             // Report
             document.getElementById('evalReport').textContent = data.report;
-            
+
             evalResult.classList.add('show');
         }
-        
-        
+
     </script>
 </body>
 </html>
